@@ -11,10 +11,11 @@ import urllib
 _ = TranslationStringFactory('pyramid_snippets')
 
 
+# Regexp based on Wordpress' shortcode implementation
 snippet_regexp = re.compile(
     r'\['                            # Opening bracket
     r'(?P<escapeopen>\[?)'           # 1: Optional second opening bracket for escaping snippets: [[tag]]
-    r'(?P<name>[\w\d\-_]+?)'          # 2: Snippet name
+    r'(?P<name>[\w\d\_-]+)'          # 2: Snippet name
     r'\b'                            # Word boundary
     r'(?P<arguments>'                # 3: Unroll the loop: Inside the opening snippet tag
         r'[^\]\/]*'                  # Not a closing bracket or forward slash
