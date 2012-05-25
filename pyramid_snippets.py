@@ -47,6 +47,18 @@ class ISnippet(Interface):
     pass
 
 
+def render_snippet(context, request, name, arguments):
+    snippet_request = Request.blank(
+        request.path + '/snippet-%s' % name,
+        base_url=request.application_url,
+        POST=urllib.urlencode(arguments))
+    snippet_request.registry = request.registry
+    return render_view(
+        context,
+        snippet_request,
+        'snippet-%s' % name)
+
+
 def render_snippets(context, request, body):
     localizer = get_localizer(request)
 
@@ -76,15 +88,7 @@ def render_snippets(context, request, body):
             elif last_key is not None:
                 arguments[last_key] = "%s %s" % (arguments[last_key], arg)
         arguments['body'] = infos['content']
-        snippet_request = Request.blank(
-            request.path + '/snippet-%s' % infos['name'],
-            base_url=request.application_url,
-            POST=urllib.urlencode(arguments))
-        snippet_request.registry = request.registry
-        result = render_view(
-            context,
-            snippet_request,
-            'snippet-%s' % infos['name'])
+        result = render_snippet(context, request, infos['name'], arguments)
         if result is None:
             return '<div class="alert alert-error">{0}</div>'.format(
                 localizer.translate(
