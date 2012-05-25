@@ -78,6 +78,7 @@ def render_snippets(context, request, body):
         arguments['body'] = infos['content']
         snippet_request = Request.blank(
             request.path + '/snippet-%s' % infos['name'],
+            base_url=request.application_url,
             POST=urllib.urlencode(arguments))
         snippet_request.registry = request.registry
         result = render_view(

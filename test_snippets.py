@@ -26,6 +26,14 @@ def test_arguments(config, request):
     assert out == u'Blubber - egg'
 
 
+def test_baseurl(config, request):
+    def foo(context, request):
+        return Response(request.application_url)
+    config.add_snippet(name='foo', snippet=foo)
+    out = render_snippets(None, request, '[foo/]')
+    assert out == u'http://example.com'
+
+
 class TestSnippetsRegexp(TestCase):
     def setUp(self):
         from pyramid_snippets import snippet_regexp
