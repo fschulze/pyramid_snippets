@@ -1,4 +1,29 @@
+from pyramid.response import Response
+from pyramid_snippets import render_snippets
 from unittest import TestCase
+
+
+def test_non_existing(request):
+    out = render_snippets(None, request, '[foo /]')
+    assert out == u'<div class="alert alert-error">No snippet with name \'foo\' registered.</div>'
+
+
+def test_rendering(config, request):
+    def foo(context, request):
+        return Response(u"Foo")
+    config.add_snippet(name='foo', snippet=foo)
+    out = render_snippets(None, request, '[foo /]')
+    assert out == u'Foo'
+
+
+def test_arguments(config, request):
+    def foo(context, request):
+        return Response("{0} - {1}".format(
+            request.POST.get('body'),
+            request.POST.get('ham')))
+    config.add_snippet(name='foo', snippet=foo)
+    out = render_snippets(None, request, '[foo ham=egg]Blubber[/foo]')
+    assert out == u'Blubber - egg'
 
 
 class TestSnippetsRegexp(TestCase):
