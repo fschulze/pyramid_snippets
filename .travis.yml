@@ -4,4 +4,4 @@ python:
   - "2.7"
 install:
   - python setup.py dev
-script: py.test --tb=native --cov=kotti --cov-report=term-missing
+script: py.test --tb=native --cov=pyramid_snippets --cov-report=term-missing
